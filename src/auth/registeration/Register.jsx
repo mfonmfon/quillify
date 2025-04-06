@@ -1,8 +1,37 @@
 
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigation } from 'react-router-dom'
+import userAuthStore from '../../zustands/stores/UserAuthStore'
 
 const Register = () => {
+  const { register, error, isLoading } = userAuthStore();
+  const [userFormData, setUserFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  })
+  const navigateToDashboard = useNavigation();
+
+  const handleRegistrationInputChange = (event)=>{
+    const { name, value } = event.target;
+    setUserFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+
+  const handleRegistrationSubmit = async(event)=>{
+    event.preventDefault();
+    await register(userFormData);
+   if(error){
+    alert(error)
+  }
+  else{
+    alert('Registration successful')
+    navigateToDashboard ('/login')
+  }
+}
   return (
     <div className='w-full min-h-screen flex justify-center items-center p-4 '> 
       <div className=' rounded-xl shadow-lg p-8 sm:p-12  w-full max-w-md bg-gradient-to-bl from-blue-50'>
@@ -10,7 +39,7 @@ const Register = () => {
           <h1 className='font-medium-300 text-2xl'>Get Onboarded Here </h1>
 
         </div>
-        <form className='space-y-6 '>
+        <form onSubmit={handleRegistrationSubmit} className='space-y-6 '>
         <div className=''>
             <label className='block text-gray-700 font-medium mb-2'>First name</label>
             <input
@@ -18,6 +47,7 @@ const Register = () => {
             type='firstName'
             placeholder='first name'
             name='first name'
+            onChange={handleRegistrationInputChange}
             required
             />
           </div>
@@ -29,6 +59,7 @@ const Register = () => {
             type='firstName'
             placeholder='first name'
             name='first name'
+            onChange={handleRegistrationInputChange}
             required
             />
           </div>
@@ -40,6 +71,7 @@ const Register = () => {
             type='email'
             placeholder='example@example.com'
             name='eamil'
+            onChange={handleRegistrationInputChange}
             required
             />
           </div>
@@ -51,6 +83,7 @@ const Register = () => {
             type='password'
             placeholder='password'
             name='password'
+            onChange={handleRegistrationInputChange}
             required
             />
 
@@ -60,9 +93,16 @@ const Register = () => {
           </div>
 
           <div className='mb-6 rounded-lg bg-blue-600 px-6 cursor-grabbing'>
-            <button className='text-white text-xl shadow-md  py-3 cursor-grabbing'
-            onClick={()=>{window.location.href='/login'}}
-            >Proceed</button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full p-2 rounded ${
+            isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
+            } text-white flex items-center justify-center`}
+          >
+          {isLoading ? <span className="animate-spin border-2 border-white border-t-transparent rounded-full h-5 w-5"></span> : "Proceed"}
+        </button>
+
           </div>
         </form>
 

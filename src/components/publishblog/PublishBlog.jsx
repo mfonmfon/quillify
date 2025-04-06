@@ -46,7 +46,6 @@ const PublishBlog = () => {
               required
             ></textarea>
           </div>
-
           {/* Categories */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
@@ -60,7 +59,6 @@ const PublishBlog = () => {
               required
             />
           </div>
-
           {/* Thumbnail Upload */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
@@ -74,7 +72,6 @@ const PublishBlog = () => {
               required
             />
           </div>
-
           {/* Image Preview */}
           {imagePreview && (
             <div className="my-4 sm:my-6">
@@ -85,7 +82,6 @@ const PublishBlog = () => {
               />
             </div>
           )}
-
           {/* Submit Button */}
           <div className="text-center">
             <button
