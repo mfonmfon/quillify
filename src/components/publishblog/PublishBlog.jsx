@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
 
 const PublishBlog = () => {
+  const [blogPostFormData, setBlogPostFormData] = useState({
+    title: '',
+    description: '',
+    categories: '',
+    thumbnail: null,
+  });
+
   const [imagePreview, setImagePreview] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBlogPostFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -9,7 +24,18 @@ const PublishBlog = () => {
       const reader = new FileReader();
       reader.onload = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
+
+      setBlogPostFormData((prevData) => ({
+        ...prevData,
+        thumbnail: file,
+      }));
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form Data:', blogPostFormData);
+    // Add logic to send `blogPostFormData` to the backend
   };
 
   return (
@@ -18,7 +44,7 @@ const PublishBlog = () => {
         <h1 className="text-xl sm:text-2xl font-bold text-blue-600 mb-6 text-center">
           Share Your Thoughts
         </h1>
-        <form className="space-y-4 sm:space-y-6">
+        <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Title */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
@@ -29,23 +55,28 @@ const PublishBlog = () => {
               type="text"
               name="title"
               placeholder="Enter your blog title"
+              value={blogPostFormData.title}
+              onChange={handleInputChange}
               required
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
+            <label className="block text-gray-600 font-medium mb-2 text-sm sm:text-base">
               Description
             </label>
             <textarea
               className="w-full border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Write your thoughts here..."
               rows="4"
-              sm:rows="6"
+              name="description"
+              value={blogPostFormData.description}
+              onChange={handleInputChange}
               required
             ></textarea>
           </div>
+
           {/* Categories */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
@@ -56,9 +87,12 @@ const PublishBlog = () => {
               type="text"
               name="categories"
               placeholder="Enter categories (e.g., Tech, Lifestyle)"
+              value={blogPostFormData.categories}
+              onChange={handleInputChange}
               required
             />
           </div>
+
           {/* Thumbnail Upload */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
@@ -72,6 +106,7 @@ const PublishBlog = () => {
               required
             />
           </div>
+
           {/* Image Preview */}
           {imagePreview && (
             <div className="my-4 sm:my-6">
@@ -82,6 +117,7 @@ const PublishBlog = () => {
               />
             </div>
           )}
+
           {/* Submit Button */}
           <div className="text-center">
             <button

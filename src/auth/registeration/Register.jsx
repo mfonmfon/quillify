@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react'
-import { Link, useNavigation } from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import userAuthStore from '../../zustands/stores/UserAuthStore'
 
 const Register = () => {
-  const { register, error, isLoading } = userAuthStore();
+  const { register,  isLoading } = userAuthStore();
   const [userFormData, setUserFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
   })
-  const navigateToDashboard = useNavigation();
+  const navigateToDashboard = useNavigate();
 
   const handleRegistrationInputChange = (event)=>{
     const { name, value } = event.target;
@@ -23,14 +23,8 @@ const Register = () => {
 
   const handleRegistrationSubmit = async(event)=>{
     event.preventDefault();
-    await register(userFormData);
-   if(error){
-    alert(error)
-  }
-  else{
-    alert('Registration successful')
-    navigateToDashboard ('/login')
-  }
+   const {firstName, lastName, email, password} = userFormData;
+   await register({firstName, lastName, email, password}, ()=>navigateToDashboard('/dashboard'));
 }
   return (
     <div className='w-full min-h-screen flex justify-center items-center p-4 '> 
@@ -44,9 +38,10 @@ const Register = () => {
             <label className='block text-gray-700 font-medium mb-2'>First name</label>
             <input
             className='w-full px-2 py-3 border border-gray-500 focus:outline-none rounded-xl'
-            type='firstName'
+            type='text'
             placeholder='first name'
             name='first name'
+            value={FormData.firstName}
             onChange={handleRegistrationInputChange}
             required
             />
@@ -57,8 +52,9 @@ const Register = () => {
             <input
             className='w-full px-3 py-3 border rounded-xl border-gray-500 focus:outline-none'
             type='firstName'
-            placeholder='first name'
+            placeholder='last name'
             name='first name'
+            value={FormData.lastName}
             onChange={handleRegistrationInputChange}
             required
             />
@@ -71,6 +67,7 @@ const Register = () => {
             type='email'
             placeholder='example@example.com'
             name='eamil'
+            value={FormData.email}
             onChange={handleRegistrationInputChange}
             required
             />
@@ -81,8 +78,9 @@ const Register = () => {
             <input
             className='w-full px-3 py-3 rounded-xl border border-gray-500 focus:outline-none'
             type='password'
-            placeholder='password'
+            placeholder='**********'
             name='password'
+            value={FormData.password}
             onChange={handleRegistrationInputChange}
             required
             />
@@ -95,6 +93,7 @@ const Register = () => {
           <div className='mb-6 rounded-lg bg-blue-600 px-6 cursor-grabbing'>
           <button
             type="submit"
+            
             disabled={isLoading}
             className={`w-full p-2 rounded ${
             isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
@@ -109,7 +108,6 @@ const Register = () => {
         <div className=''>
           <h2 className='text-black'>Already have an account? <span className='text-blue-500'>
             <Link>Login</Link></span></h2>
-
         </div>
       </div>
     </div>

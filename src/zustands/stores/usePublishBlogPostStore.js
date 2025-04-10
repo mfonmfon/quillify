@@ -12,23 +12,32 @@ const usePublsihBlogPostStore = create((set) => ({
 
     try {
       const blogPostDataResponse = await fetch(
-        `https://api.twitter.com/posts?_page=${page}&_limit=${limit}` //Corrected query parameter for limit
+        `https://api.twitter.com/posts?_page=${page}&_limit=${limit}`, // Corrected query parameter for limit
+        {
+          headers: {
+            'Accept': 'application/json',
+            // Add authentication headers if required
+            // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+          },
+        }
       );
+
       if (!blogPostDataResponse.ok) {
         throw new Error(`HTTP error! status: ${blogPostDataResponse.status}`);
       }
-      const totalPosts = blogPostDataResponse.headers.get("X-Total-Count"); //Use standard header for total count
+
+      const totalPosts = blogPostDataResponse.headers.get("X-Total-Count"); // Use standard header for total count
       const data = await blogPostDataResponse.json();
 
       set({
         blogPost: data,
         isLoading: false,
         currentPage: page,
-        totalPages: Math.ceil(totalPosts / limit) || 1, //Default to 1 if totalPosts is null
+        totalPages: totalPosts ? Math.ceil(totalPosts / limit) : 1, // Default to 1 if totalPosts is null
       });
     } catch (error) {
       set({ isLoading: false });
-      console.error("Error fetching posts:", error); //Improved error logging
+      console.error("Error fetching posts:", error); // Improved error logging
     }
   },
 
