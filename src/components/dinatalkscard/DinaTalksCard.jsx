@@ -53,8 +53,6 @@ const DinaTalksCard = () => {
     },
   ];
 
-  
-
   return (
     <>
     <div className="w-full py-12 bg-gray-100">

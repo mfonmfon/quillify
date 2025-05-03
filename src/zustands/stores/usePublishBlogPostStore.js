@@ -16,8 +16,9 @@ const usePublsihBlogPostStore = create((set) => ({
         {
           headers: {
             'Accept': 'application/json',
-            // Add authentication headers if required
-            // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+            //Add authentication headers if required
+            //'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+            
           },
         }
       );

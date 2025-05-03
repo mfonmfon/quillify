@@ -93,6 +93,7 @@ const Register = () => {
           <div className='mb-6 rounded-lg bg-blue-600 px-6 cursor-grabbing'>
           <button
             type="submit"
+            onClick={handleRegistrationSubmit}
             
             disabled={isLoading}
             className={`w-full p-2 rounded ${
