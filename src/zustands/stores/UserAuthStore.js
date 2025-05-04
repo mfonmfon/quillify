@@ -1,52 +1,53 @@
-import axios from "axios";
-import Swal from "sweetalert2";
 import { create } from "zustand";
+import { persist } from 'zustand/middleware';
 
-const useUserAuthStore = create((set) => ({
-  user: null,
-  token: null,
-  error: null,
-  isLoading: false,
+const useUserAuthStore = create(
+  persist(
+    (set) => ({
+      // State
+      user: null,
+      token: null,
+      error: null,
+      isLoading: false,
+      isAuthenticated: false,
 
-  register: async (userData) => {
-    set({ isLoading: true, error: null });
+      // Actions
+      setUser: (user) => set({ user, isAuthenticated: true }),
+      setToken: (token) => set({ token }),
+      setError: (error) => set({ error }),
+      setLoading: (isLoading) => set({ isLoading }),
+      clearError: () => set({ error: null }),
+      
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          error: null,
+        });
+      },
 
-    try {
-      const response = await axios.post(
-        'http://localhost:8080/publisher/register',
-        userData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        }
-      );
-      const user = response.data?.user || response.data;
-      set({ user, isLoading: false });
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Registration Successful',
-        text: 'Your account has been created!',
-        confirmButtonText: 'OK',
-        color: '#3085d6',
-      });
-    } catch (error) {
-      set({ isLoading: false });
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error.response?.data?.message || 'Something went wrong!',
-        confirmButtonText: 'Try again',
-        confirmButtonColor: '#3085d6',
-      });
+      // Reset all state
+      reset: () => {
+        set({
+          user: null,
+          token: null,
+          error: null,
+          isLoading: false,
+          isAuthenticated: false,
+        });
+      },
+    }),
+    {
+      name: 'user-auth-storage',
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
-  },
-
-  // ...existing code for login and other methods...
-}));
+  )
+);
 
 export default useUserAuthStore;
 
