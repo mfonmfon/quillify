@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const DinaTalksHero = () => {
   const navigate = useNavigate();
   return (
-    <div className=" relative w-full h-[600px] bg-gradient-to-r from-[#0a0a0a] to-[#1a1a1a] text-white overflow-hidden">
+    <div className="relative w-full h-[500px] md:h-[600px] bg-gradient-to-r from-[#0a0a0a] to-[#1a1a1a] text-white overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30"
@@ -17,18 +17,25 @@ const DinaTalksHero = () => {
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center md:text-left md:flex-row md:justify-between">
         {/* Text Section */}
         <div className="max-w-6xl mt-40 md:mb-0 leading-relaxed">
-          <h4 className="text-lg font-medium uppercase tracking-widest text-gray-400 mb-4 ">
+          <h4 className="text-lg font-medium uppercase tracking-widest text-gray-400 mb-4 hidden md:block">
             Your Journey to Tomorrow Begins Here
           </h4>
-          <h1 className=" text-5xl md:text-8xl font-extrabold leading-tight mb-6">
-            Explore Dina Talks Of Artificial Intelligence
+          <h1 className="text-4xl md:text-8xl font-extrabold leading-tight mb-6">
+            Explore Dina Talks Of{' '}
+            <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+              AI
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-8">
-            Discover the latest trends, advancements, and applications of artificial intelligence in the digital age.<br></br>
+          <p className="text-base md:text-xl text-gray-300 mb-8 hidden md:block">
+            Discover the latest trends, advancements, and applications of artificial intelligence in the digital age.
             Unlock your full potential with Dina Talks.
           </p>
-          <button className="cursor-grab px-7 py-5 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-900 transition duration-300"
-          onClick={()=>navigate('/register')}
+          <p className="text-base text-gray-300 mb-8 md:hidden">
+            Discover AI trends and unlock your potential with Dina Talks.
+          </p>
+          <button 
+            className="cursor-grab px-7 py-5 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-900 transition duration-300 w-full md:w-auto"
+            onClick={()=>navigate('/register')}
           >
             Get Started
           </button>
@@ -48,4 +55,5 @@ const DinaTalksHero = () => {
     </div>
   );
 };
+
 export default DinaTalksHero;

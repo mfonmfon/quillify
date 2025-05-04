@@ -1,35 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { BiSearch, BiUser, BiMenu, BiX } from 'react-icons/bi';
-import { Link, useNavigate } from 'react-router-dom';
-import { FiBook, FiHome, FiInfo, FiNewspaper } from 'react-icons/fi';
+import { useState } from 'react';
+import { BiSearch } from 'react-icons/bi';
+// import { SlEarphones } from 'react-icons/sl';
+import { Link } from 'react-router-dom';
+
 
 const DinaTalksHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
-  const searchRef = useRef(null);
-  const navigate = useNavigate();
-
-  // Sample suggestions data (replace with your actual API call)
-  const sampleSuggestions = [
-    { id: 1, title: 'Getting Started with React', type: 'blog' },
-    { id: 2, title: 'Advanced JavaScript Concepts', type: 'blog' },
-    { id: 3, title: 'Web Development Best Practices', type: 'blog' },
-    { id: 4, title: 'UI/UX Design Principles', type: 'blog' },
-    { id: 5, title: 'Mobile App Development Guide', type: 'blog' },
-  ];
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -37,202 +14,113 @@ const DinaTalksHeader = () => {
 
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
-      navigate(`/search?q=${searchQuery}`);
-      setShowSuggestions(false);
+      console.log('Searching for:', searchQuery);
+      // You can implement actual search functionality here
     }
   };
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    
-    if (query.length > 0) {
-      // Filter suggestions based on search query
-      const filtered = sampleSuggestions.filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase())
-      );
-      setSuggestions(filtered);
-      setShowSuggestions(true);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
+  const newsHeaderData=[
+    {
+      title: "Home",
+      path:"/"
+    },
+    {
+      title: "About",
+      path:"/about"
+    },
+    {
+      title: "About",
+      path:"/about"
+    },
+    {
+      title: "News",
+      path:"/news"
     }
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchQuery(suggestion.title);
-    setShowSuggestions(false);
-    navigate(`/search?q=${suggestion.title}`);
-  };
-
-  const navItems = [
-    { title: "Home", path: "/", icon: <FiHome className="w-5 h-5" /> },
-    { title: "About", path: "/about", icon: <FiInfo className="w-5 h-5" /> },
-    { title: "Blog", path: "/blog", icon: <FiBook className="w-5 h-5" /> },
-    { title: "News", path: "/news", icon: <FiNewspaper className="w-5 h-5" /> },
-  ];
-
+  ]
   return (
-    <div className='w-full bg-white shadow-sm fixed top-0 left-0 z-50'>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className='flex justify-between items-center h-20'>
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              Dina<span className="text-gray-900">Talks</span>
-            </span>
-          </Link>
+    <div className='w-full bg-white shadow-md fixed top-0 left-0 z-50'>
+      <nav className='flex justify-between items-center p-4'>
+        <div>
+          <h2 className='text-blue-600 text-[17px]'>
+            News<span className='text-black'>hub</span>
+          </h2>
+        </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200"
-              >
-                {item.icon}
-                <span className="font-medium">{item.title}</span>
-              </Link>
-            ))}
-          </div>
-
-          {/* Search and Auth */}
-          <div className="hidden lg:flex items-center space-x-4">
-            {/* Search Bar */}
-            <div className="relative" ref={searchRef}>
-              <div className="relative">
-                <input
-                  type="search"
-                  className="w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Search blogs, news..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  onKeyDown={handleSearch}
-                  onFocus={() => searchQuery.length > 0 && setShowSuggestions(true)}
-                />
-                <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-
-              {/* Search Suggestions */}
-              {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                  {suggestions.map((suggestion) => (
-                    <div
-                      key={suggestion.id}
-                      className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center space-x-2"
-                      onClick={() => handleSuggestionClick(suggestion)}
-                    >
-                      <BiSearch className="text-gray-400" />
-                      <span className="text-gray-700">{suggestion.title}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-3">
-              <Link
-                to="/register"
-                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200"
-              >
-                Sign Up
-              </Link>
-              <Link
-                to="/login"
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-full hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                Login
-              </Link>
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden">
-            <button
-              onClick={toggleMobileMenu}
-              className="text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
+        {/* Mobile Menu Icon */}
+        <div className='block lg:hidden'>
+          <button
+            onClick={toggleMobileMenu}
+            className='text-gray-600 focus:outline-none'
+          >
+            <svg className='h-6 w-6' viewBox='0 0 24 24' stroke='currentColor' fill='none'>
               {mobileMenuOpen ? (
-                <BiX className="h-6 w-6" />
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M6 18L18 6M6 6l12 12' />
               ) : (
-                <BiMenu className="h-6 w-6" />
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M4 6h16M4 12h16m-7 6h7' />
               )}
-            </button>
-          </div>
-        </nav>
+            </svg>
+          </button>
+        </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {/* Mobile Search */}
-              <div className="relative mb-4" ref={searchRef}>
-                <div className="relative">
-                  <input
-                    type="search"
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Search blogs, news..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onKeyDown={handleSearch}
-                    onFocus={() => searchQuery.length > 0 && setShowSuggestions(true)}
-                  />
-                  <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                </div>
+        {/* Navigation Links */}
+        <ul
+          className={`${
+            mobileMenuOpen ? 'flex flex-col items-center space-y-4 absolute bg-white w-full left-0 top-16 p-4 shadow-md' 
+            : 'hidden lg:flex lg:flex-row gap-6'
+          }`}
+        >
+          {newsHeaderData.map((newshead, index) => (
+            <li className='list-none text-[13px]' key={index}>
+              <Link className='hover:text-blue-500' to={newshead.path}>
+                {newshead.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-                {/* Mobile Search Suggestions */}
-                {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
-                    {suggestions.map((suggestion) => (
-                      <div
-                        key={suggestion.id}
-                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center space-x-2"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        <BiSearch className="text-gray-400" />
-                        <span className="text-gray-700">{suggestion.title}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+        {/* Search Input */}
+        <div className='relative hidden lg:flex items-center'>
+          <input
+            type='search'
+            className='px-4 py-2 border rounded-2xl outline-none w-64'
+            placeholder='Search news...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+          <BiSearch className='absolute right-4 text-gray-500 cursor-pointer' onClick={() => console.log('Searching for:', searchQuery)} />
+        </div>
 
-              {/* Mobile Navigation Links */}
-              {navItems.map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.icon}
-                  <span className="font-medium">{item.title}</span>
-                </Link>
-              ))}
+        {/* Buttons */}
+        <div className='hidden lg:flex space-x-4 cursor-grabbing'>
+          <button className='cursor-grabbing border rounded-2xl py-2 px-6 bg-blue-500 text-white text-[12px]'
+          onClick={()=>{
+            window.location.href='/register'
+          }}
+          >Sign Up</button>
+          <button className='cursor-grabbing border rounded-2xl py-2 px-6 bg-blue-500 text-white text-[12px]'
+          onClick={()=>{
+            window.location.href="/login"
+          }}
+          >Login</button>
+        </div>
+      </nav>
 
-              {/* Mobile Auth Buttons */}
-              <div className="pt-4 pb-2 space-y-2">
-                <Link
-                  to="/register"
-                  className="block w-full px-4 py-2 text-center text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-                <Link
-                  to="/login"
-                  className="block w-full px-4 py-2 text-center text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Mobile Search Bar */}
+      {mobileMenuOpen && (
+        <div className='flex justify-center p-4 bg-white shadow-md lg:hidden'>
+          <input
+            type='search'
+            className='px-4 py-2 border rounded-2xl outline-none w-3/4'
+            placeholder='Search news...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+          <button className='ml-2 bg-blue-500 text-white rounded-2xl py-2 px-4' onClick={() => 
+            console.log('Searching for:', searchQuery)}></button>
+        </div>
+      )}
     </div>
   );
 };
